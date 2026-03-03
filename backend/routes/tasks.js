@@ -33,7 +33,7 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res) => {
-    const { title, description, priority } = req.body;
+    const { title, description, priority, dueDate } = req.body;
 
     const validPriorities = ['low', 'medium', 'high'];
 
@@ -52,6 +52,7 @@ router.post('/', (req, res) => {
         completed: false,
         createdAt: new Date(),
         priority: priority || 'medium',
+        dueDate: dueDate || null,
     };
 
     tasks.push(task);
@@ -60,7 +61,7 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
     const task = tasks.find(t => t.id === parseInt(req.params.id));
-    const { title, description, priority } = req.body;
+    const { title, description, priority, dueDate } = req.body;
 
     const validPriorities = ['low', 'medium', 'high'];
 
@@ -75,6 +76,7 @@ router.put('/:id', (req, res) => {
     if (title) task.title = title;
     if (description !== undefined) task.description = description;
     if (priority) task.priority = priority;
+    if (dueDate !== undefined) task.dueDate = dueDate;
 
     res.status(200).json({ message: 'Task updated successfully', task });
 });
