@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import type { Task } from '../services/taskService'
+import ConfirmModal from './ConfirmModal'
 
 interface Props {
   task: Task
@@ -8,16 +10,21 @@ interface Props {
 }
 
 function TaskItem({ task, onToggle, onDelete, onEdit }: Props) {
+  const [showConfirm, setShowConfirm] = useState(false)
+
   const handleDelete = (): void => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
-      onDelete(task.id)
-    }
+    setShowConfirm(true)
+  }
+
+  const handleConfirmDelete = (): void => {
+    setShowConfirm(false)
+    onDelete(task.id)
   }
 
   const priorityClass = `priority-${task.priority}`
 
   return (
-    <div className={`task-item ${task.completed ? 'completed' : ''}`}>
+    <div className={`task-item priority-${task.priority}-item ${task.completed ? 'completed' : ''} task-enter`}>
       <div className="task-header">
         <span className={`priority-badge ${priorityClass}`}>
           {task.priority}
@@ -47,6 +54,15 @@ function TaskItem({ task, onToggle, onDelete, onEdit }: Props) {
           Delete
         </button>
       </div>
+
+      {showConfirm && (
+        <ConfirmModal
+          title="Delete task?"
+          message={`"${task.title}" will be permanently removed.`}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
     </div>
   )
 }

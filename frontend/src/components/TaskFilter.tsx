@@ -4,6 +4,7 @@ interface Props {
 }
 
 function TaskFilter({ currentFilter, onFilterChange }: Props) {
+  
   const filters: string[] = ['all', 'completed', 'pending']
 
   return (

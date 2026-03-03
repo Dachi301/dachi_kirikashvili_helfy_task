@@ -17,15 +17,21 @@ export interface TaskData {
 
 const API_URL = 'http://localhost:4000/api/tasks'
 
-export async function getTasks(filter = ''): Promise<Task[]> {
-  let url = API_URL
-  const params = new URLSearchParams()
+export interface PaginatedResponse {
+  tasks: Task[]
+  total: number
+  page: number
+  totalPages: number
+}
 
+export async function getTasks(filter = '', sort = '', page = 1, limit = 10): Promise<PaginatedResponse> {
+  const params = new URLSearchParams()
   if (filter === 'completed') params.set('completed', 'true')
   if (filter === 'pending') params.set('completed', 'false')
-
-  const query = params.toString()
-  if (query) url += `?${query}`
+  if (sort) params.set('sort', sort)
+  params.set('page', String(page))
+  params.set('limit', String(limit))
+  const url = `${API_URL}?${params.toString()}`
 
   const res = await fetch(url)
   if (!res.ok) throw new Error('Failed to fetch tasks')

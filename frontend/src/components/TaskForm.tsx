@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import type { Task, TaskData } from '../services/taskService'
 
@@ -13,6 +13,7 @@ function TaskForm({ onSubmit, editingTask, onCancelEdit }: Props) {
   const [description, setDescription] = useState<string>('')
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium')
   const [dueDate, setDueDate] = useState<string>('')
+  const dateInputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string>('')
 
   useEffect(() => {
@@ -63,32 +64,49 @@ function TaskForm({ onSubmit, editingTask, onCancelEdit }: Props) {
 
       {error && <p className="form-error">{error}</p>}
 
-      <input
-        type="text"
-        placeholder="Task title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <div className="form-field">
+        <label htmlFor="task-title">Title</label>
+        <input
+          id="task-title"
+          type="text"
+          placeholder="Task title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
 
-      <textarea
-        placeholder="Description (optional)"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        rows={3}
-      />
+      <div className="form-field">
+        <label htmlFor="task-description">Description</label>
+        <textarea
+          id="task-description"
+          placeholder="Optional"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={3}
+        />
+      </div>
 
       <div className="form-row">
-        <select value={priority} onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}>
-          <option value="low">Low Priority</option>
-          <option value="medium">Medium Priority</option>
-          <option value="high">High Priority</option>
-        </select>
+        <div className="form-field">
+          <label htmlFor="task-priority">Priority</label>
+          <select id="task-priority" value={priority} onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
 
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-        />
+        <div className="form-field">
+          <label htmlFor="task-due-date">Due date</label>
+          <input
+            id="task-due-date"
+            ref={dateInputRef}
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            onClick={() => dateInputRef.current?.showPicker()}
+          />
+        </div>
       </div>
 
       <div className="form-actions">
