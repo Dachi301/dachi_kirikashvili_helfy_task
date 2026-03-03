@@ -156,8 +156,6 @@ function App() {
 
   const isEmptyTasks = tasks.filter((t) => t.title.toLowerCase().includes(search.toLowerCase()) || t.description?.toLowerCase().includes(search.toLowerCase())).length === 0
 
-  console.log({isEmptyTasks})
-
   return (
     <div className="app">
       <div className="app-header">
