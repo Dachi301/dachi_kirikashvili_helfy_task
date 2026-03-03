@@ -7,9 +7,12 @@ interface Props {
   onToggle: (id: number) => void
   onDelete: (id: number) => void
   onEdit: (task: Task) => void
+  isDragging: boolean
+  onGripMouseDown: () => void
+  onItemMouseEnter: () => void
 }
 
-function TaskItem({ task, onToggle, onDelete, onEdit }: Props) {
+function TaskItem({ task, onToggle, onDelete, onEdit, isDragging, onGripMouseDown, onItemMouseEnter }: Props) {
   const [showConfirm, setShowConfirm] = useState(false)
 
   const handleDelete = (): void => {
@@ -24,11 +27,23 @@ function TaskItem({ task, onToggle, onDelete, onEdit }: Props) {
   const priorityClass = `priority-${task.priority}`
 
   return (
-    <div className={`task-item priority-${task.priority}-item ${task.completed ? 'completed' : ''} task-enter`}>
+    <div
+      className={`task-item priority-${task.priority}-item ${task.completed ? 'completed' : ''} task-enter ${isDragging ? 'dragging' : ''}`}
+      onMouseEnter={onItemMouseEnter}
+    >
       <div className="task-header">
-        <span className={`priority-badge ${priorityClass}`}>
-          {task.priority}
-        </span>
+        <div className="task-header-left">
+          <span
+            className="drag-handle"
+            title="Drag to reorder"
+            onMouseDown={(e) => { e.preventDefault(); onGripMouseDown() }}
+          >
+            <span className="grip-dots" />
+          </span>
+          <span className={`priority-badge ${priorityClass}`}>
+            {task.priority}
+          </span>
+        </div>
         {task.dueDate && (
           <span className="due-date">Due: {task.dueDate}</span>
         )}

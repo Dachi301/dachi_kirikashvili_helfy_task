@@ -319,13 +319,67 @@ body {
   border-radius: 10px;
   padding: 16px 18px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s, opacity 0.15s, transform 0.15s;
   border-left: 3px solid transparent;
+  cursor: default;
 }
 
 .task-item:hover {
   border-color: #d4d4d4;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.task-item.dragging {
+  background: #f8f8ff;
+  border-color: #c7d2fe;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: scale(1.02);
+  z-index: 10;
+  position: relative;
+}
+
+.task-item.dragging .drag-handle {
+  background: #eef2ff;
+}
+
+.task-item.dragging .grip-dots {
+  background-image: radial-gradient(circle, #6366f1 1.2px, transparent 1.2px);
+}
+
+.task-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 24px;
+  cursor: grab;
+  user-select: none;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.drag-handle:hover {
+  background: #f0f0f0;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+  background: #e8e8e8;
+}
+
+.grip-dots {
+  display: block;
+  width: 8px;
+  height: 14px;
+  background-image: radial-gradient(circle, #bbb 1.2px, transparent 1.2px);
+  background-size: 4px 4px;
+  background-position: 0 1px;
 }
 
 .task-item.priority-high-item {

@@ -3,10 +3,12 @@ import TaskForm from './components/TaskForm'
 import TaskList from './components/TaskList'
 import TaskFilter from './components/TaskFilter'
 import { getTasks, createTask, updateTask, deleteTask, toggleTask } from './services/taskService'
+import { getSavedOrder, applyOrder } from './utils'
 import type { Task, TaskData } from './services/taskService'
 import './App.css'
 
 const PAGE_SIZE = 10
+const ORDER_KEY = 'task-order'
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -31,7 +33,8 @@ function App() {
       }
       setError('')
       const data = await getTasks(filter, sort, pageNum, PAGE_SIZE)
-      setTasks(prev => append ? [...prev, ...data.tasks] : data.tasks)
+      const order = getSavedOrder(ORDER_KEY)
+      setTasks(prev => applyOrder(append ? [...prev, ...data.tasks] : data.tasks, order))
       setHasMore(pageNum < data.totalPages)
       setTotalTasks(data.total)
       pageRef.current = pageNum
@@ -61,7 +64,8 @@ function App() {
       setError('')
       const currentMax = pageRef.current
       const data = await getTasks(filter, sort, 1, currentMax * PAGE_SIZE)
-      setTasks(data.tasks)
+      const order = getSavedOrder(ORDER_KEY)
+      setTasks(applyOrder(data.tasks, order))
       setHasMore(1 < data.totalPages)
       setTotalTasks(data.total)
       pageRef.current = 1
@@ -122,6 +126,11 @@ function App() {
   const handleEdit = (task: Task) => {
     setEditingTask(task)
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleReorder = (reordered: Task[]) => {
+    setTasks(reordered)
+    localStorage.setItem(ORDER_KEY, JSON.stringify(reordered.map(t => t.id)))
   }
 
   const handleCancelEdit = () => {
@@ -188,6 +197,7 @@ function App() {
           onToggle={handleToggleTask}
           onDelete={handleDeleteTask}
           onEdit={handleEdit}
+          onReorder={handleReorder}
           onLoadMore={loadMore}
           hasMore={hasMore}
           loadingMore={loadingMore}
