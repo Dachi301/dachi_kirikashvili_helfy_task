@@ -33,8 +33,11 @@ function App() {
       }
       setError('')
       const data = await getTasks(filter, sort, pageNum, PAGE_SIZE)
-      const order = getSavedOrder(ORDER_KEY)
-      setTasks(prev => applyOrder(append ? [...prev, ...data.tasks] : data.tasks, order))
+      const order = sort ? [] : getSavedOrder(ORDER_KEY)
+      setTasks(prev => {
+        const combined = append ? [...prev, ...data.tasks] : data.tasks
+        return order.length ? applyOrder(combined, order) : combined
+      })
       setHasMore(pageNum < data.totalPages)
       setTotalTasks(data.total)
       pageRef.current = pageNum
@@ -64,8 +67,7 @@ function App() {
       setError('')
       const currentMax = pageRef.current
       const data = await getTasks(filter, sort, 1, currentMax * PAGE_SIZE)
-      const order = getSavedOrder(ORDER_KEY)
-      setTasks(applyOrder(data.tasks, order))
+      setTasks(sort ? data.tasks : applyOrder(data.tasks, getSavedOrder(ORDER_KEY)))
       setHasMore(1 < data.totalPages)
       setTotalTasks(data.total)
       pageRef.current = 1
@@ -141,7 +143,7 @@ function App() {
     <div className="app">
       <div className="app-header">
         <h1>Task Manager</h1>
-        <p>Stay on top of what matters</p>
+        <p>Task Management System</p>
       </div>
 
       {error && <p className="error-message">{error}</p>}
