@@ -4,15 +4,45 @@ const router = express.Router();
 let tasks = [];
 let nextId = 1;
 
-router.get('/', (req, res) => {
-    res.status(200).json(tasks);
-});
+router.get('/', (req, res, next) => {
+    try {
+      let result = [...tasks]
+  
+      if (req.query.completed !== undefined) {
+        const completed = req.query.completed === 'true'
+        result = result.filter(t => t.completed === completed)
+      }
+  
+      if (req.query.priority) {
+        result = result.filter(t => t.priority === req.query.priority)
+      }
+  
+      if (req.query.sort === 'title') {
+        result.sort((a, b) => a.title.localeCompare(b.title))
+      } else if (req.query.sort === 'priority') {
+        const order = { high: 1, medium: 2, low: 3 }
+        result.sort((a, b) => order[a.priority] - order[b.priority])
+      } else if (req.query.sort === 'createdAt') {
+        result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      }
+  
+      res.status(200).json(result)
+    } catch (err) {
+      next(err)
+    }
+})
 
 router.post('/', (req, res) => {
     const { title, description, priority } = req.body;
 
+    const validPriorities = ['low', 'medium', 'high'];
+
     if (!title) {
         return res.status(400).json({ error: 'Title is required' });
+    }
+
+    if (priority && !validPriorities.includes(priority)) {
+        return res.status(400).json({ error: 'Priority must be low, medium, or high' });
     }
 
     const task = {
