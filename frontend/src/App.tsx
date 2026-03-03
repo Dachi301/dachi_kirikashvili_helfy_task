@@ -9,8 +9,16 @@ import './App.css'
 
 const PAGE_SIZE = 10
 const ORDER_KEY = 'task-order'
+const THEME_KEY = 'theme'
+
+function getInitialTheme(): 'light' | 'dark' {
+  const saved = localStorage.getItem(THEME_KEY)
+  if (saved === 'light' || saved === 'dark') return saved
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
 
 function App() {
+  const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme)
   const [tasks, setTasks] = useState<Task[]>([])
   const [filter, setFilter] = useState<string>('all')
   const [sort, setSort] = useState<string>('')
@@ -23,6 +31,13 @@ function App() {
   const [totalTasks, setTotalTasks] = useState<number>(0)
   const pageRef = useRef(1)
   const initialLoadDone = useRef(false)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem(THEME_KEY, theme)
+  }, [theme])
+
+  const toggleTheme = () => setTheme(t => t === 'light' ? 'dark' : 'light')
 
   const fetchTasks = useCallback(async (pageNum: number, append: boolean) => {
     try {
@@ -139,11 +154,22 @@ function App() {
     setEditingTask(null)
   }
 
+  const isEmptyTasks = tasks.filter((t) => t.title.toLowerCase().includes(search.toLowerCase()) || t.description?.toLowerCase().includes(search.toLowerCase())).length === 0
+
+  console.log({isEmptyTasks})
+
   return (
     <div className="app">
       <div className="app-header">
         <h1>Task Manager</h1>
         <p>Task Management System</p>
+        <div className="theme-toggle" onClick={toggleTheme} role="button" tabIndex={0}>
+          <div className="theme-toggle-track">
+            <div className="theme-toggle-thumb">
+              {theme === 'light' ? '☀' : '☽'}
+            </div>
+          </div>
+        </div>
       </div>
 
       {error && <p className="error-message">{error}</p>}
@@ -171,7 +197,7 @@ function App() {
 
       {!loading && (
         <div className="task-count">
-          {totalTasks} {totalTasks === 1 ? 'task' : 'tasks'}
+          {isEmptyTasks ? 0 : totalTasks} {totalTasks === 1 ? 'task' : 'tasks'}
         </div>
       )}
 
