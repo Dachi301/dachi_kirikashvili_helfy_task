@@ -60,12 +60,17 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
     const task = tasks.find(t => t.id === parseInt(req.params.id));
+    const { title, description, priority } = req.body;
+
+    const validPriorities = ['low', 'medium', 'high'];
 
     if (!task) {
         return res.status(404).json({ error: `Task with id ${req.params.id} not found` });
     }
 
-    const { title, description, priority } = req.body;
+    if (priority && !validPriorities.includes(priority)) {
+        return res.status(400).json({ error: 'Priority must be low, medium, or high' });
+    }
 
     if (title) task.title = title;
     if (description !== undefined) task.description = description;
@@ -82,7 +87,7 @@ router.delete('/:id', (req, res) => {
     }
 
     tasks.splice(index, 1);
-    res.status(200).json({ message: 'Task deleted successfully' });
+    res.status(204).send();
 });
 
 router.patch('/:id/toggle', (req, res) => {
