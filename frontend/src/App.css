@@ -1,42 +1,256 @@
-#root {
-  max-width: 1280px;
+.app {
+  max-width: 700px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.app h1 {
   text-align: center;
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+  color: #222;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.error-message {
+  background: #fee;
+  color: #c00;
+  padding: 10px 14px;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  margin-bottom: 16px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.loading {
+  text-align: center;
+  color: #666;
+  padding: 40px 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.empty-state {
+  text-align: center;
+  color: #999;
+  padding: 40px 0;
 }
 
-.card {
-  padding: 2em;
+.task-form {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.read-the-docs {
+.task-form h2 {
+  margin: 0 0 14px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.form-error {
+  color: #c00;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.task-form input[type="text"],
+.task-form textarea,
+.task-form select,
+.task-form input[type="date"] {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.task-form textarea {
+  resize: vertical;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-row select,
+.form-row input[type="date"] {
+  flex: 1;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.form-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.form-actions button[type="submit"] {
+  background: #333;
+  color: #fff;
+}
+
+.form-actions button[type="submit"]:hover {
+  background: #555;
+}
+
+.btn-cancel {
+  background: #eee;
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background: #ddd;
+}
+
+.task-filter {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.filter-btn {
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.filter-btn:hover {
+  background: #f5f5f5;
+}
+
+.filter-btn.active {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 14px;
+}
+
+.task-item:hover {
+  border-color: #bbb;
+}
+
+.task-item.completed {
+  opacity: 0.7;
+}
+
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.priority-badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.priority-low {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.priority-medium {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.priority-high {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.due-date {
+  font-size: 0.8rem;
   color: #888;
+}
+
+.task-title {
+  font-size: 1rem;
+  margin: 4px 0;
+  color: #222;
+}
+
+.task-description {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 4px 0 10px;
+}
+
+.task-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.task-actions button {
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.task-actions button:hover {
+  background: #f5f5f5;
+}
+
+.btn-toggle.done {
+  color: #2e7d32;
+  border-color: #a5d6a7;
+}
+
+.btn-delete:hover {
+  background: #fee;
+  color: #c00;
+  border-color: #fcc;
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 12px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .task-actions {
+    flex-wrap: wrap;
+  }
 }
